@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Missile Command</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div id="game-container">
+        <canvas id="gameCanvas"></canvas>
+        <div id="ui-overlay">
+            <div id="time-display">00:00:000</div>
+            <div id="score-display">Score: 0</div>
+        </div>
+    </div>
+
+    <!-- Constants -->
+    <script src="js/constants.js"></script>
+    
+    <!-- Game Classes -->
+    <script src="js/Background.js"></script>
+    <script src="js/Base.js"></script>
+    <script src="js/Launcher.js"></script>
+    <script src="js/Missile.js"></script>
+    <script src="js/Asteroid.js"></script>
+    <script src="js/Explosion.js"></script>
+    <script src="js/ScorePopup.js"></script>
+    
+    <!-- Game States -->
+    <script src="js/states/GameState.js"></script>
+    <script src="js/states/WelcomeState.js"></script>
+    <script src="js/states/InstructionsState.js"></script>
+    <script src="js/states/PlayState.js"></script>
+    <script src="js/states/GameOverState.js"></script>
+    
+    <!-- Main Game -->
+    <script src="js/Game.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html> 

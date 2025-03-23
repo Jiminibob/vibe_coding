@@ -1,0 +1,16 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+
+# Your rule content
+
+- this is a javascript canvas game project
+- new classes should in seperate javascript files
+- code should not be duplicated where possible, check code base for similar functionality
+- a constants.js file should be used for all adjustable values
+- keep the code clean and organised
+- prefer simpler solution
+- code should be human readable
+- have a functional programming approach 

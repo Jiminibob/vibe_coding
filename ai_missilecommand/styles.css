@@ -1,0 +1,89 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: #000;
+    overflow: hidden;
+    font-family: 'Arial', sans-serif;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#game-container {
+    position: relative;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#gameCanvas {
+    height: 720px;
+    background-color: #000;
+    box-shadow: 0 0 20px rgba(0, 255, 255, 0.5);
+}
+
+#ui-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    pointer-events: none;
+    color: #0ff;
+    text-shadow: 0 0 10px rgba(0, 255, 255, 0.8);
+    font-family: 'Courier New', monospace;
+    padding: 20px;
+}
+
+#time-display {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    font-size: 24px;
+}
+
+#score-display {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    font-size: 24px;
+}
+
+/* Game state screens */
+.game-screen {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    color: #0ff;
+    text-shadow: 0 0 10px rgba(0, 255, 255, 0.8);
+}
+
+.game-screen h1 {
+    font-size: 48px;
+    margin-bottom: 30px;
+}
+
+.game-screen button {
+    background: transparent;
+    border: 2px solid #0ff;
+    color: #0ff;
+    padding: 15px 30px;
+    font-size: 24px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    box-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+}
+
+.game-screen button:hover {
+    background: rgba(0, 255, 255, 0.2);
+    box-shadow: 0 0 20px rgba(0, 255, 255, 0.8);
+} 
