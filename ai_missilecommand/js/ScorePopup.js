@@ -54,8 +54,8 @@ class ScorePopup {
 
         // Draw multiplier if greater than 1
         if (this.multiplier > 1) {
-            ctx.fillStyle = CONSTANTS.COLORS.SECONDARY;
-            ctx.shadowColor = CONSTANTS.COLORS.SECONDARY;
+            ctx.fillStyle = CONSTANTS.COLORS.BASE;
+            ctx.shadowColor = CONSTANTS.COLORS.BASE;
             ctx.fillText(`x${this.multiplier}`, this.x, this.multiplierY + 25);
         }
 

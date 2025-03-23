@@ -11,6 +11,7 @@ class Explosion {
         this.destroyedAsteroids = 0;
         this.points = 0;
         this.multiplier = 1;
+        this.hitAsteroids = new Set(); // Track which asteroids we've already hit
     }
 
     update(deltaTime) {
@@ -59,12 +60,16 @@ class Explosion {
     }
 
     checkCollision(asteroid) {
+        // Skip if we've already hit this asteroid or if it's already destroyed
+        if (this.hitAsteroids.has(asteroid) || asteroid.destroyed) return false;
+        
         const dx = this.x - asteroid.x;
         const dy = this.y - asteroid.y;
         const distance = Math.sqrt(dx * dx + dy * dy);
         
         // Check if asteroid is within explosion radius
         if (distance <= this.radius + asteroid.radius) {
+            this.hitAsteroids.add(asteroid); // Remember this asteroid
             this.destroyedAsteroids++;
             return true;
         }

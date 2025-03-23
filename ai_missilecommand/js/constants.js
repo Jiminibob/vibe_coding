@@ -13,11 +13,12 @@ const CONSTANTS = {
         SUCCESS: '#00ff88', // Green
         EXPLOSION: '#fff',  // White
         BASE: '#ffbb00',    // Golden yellow
+        FREEZE: '#88ddff',  // Light blue for freeze effect
     },
 
     // Game entities
     LAUNCHER: {
-        COOLDOWN: 1000,     // 1 second between shots
+        COOLDOWN: 1000,     // 1.5 seconds between shots (increased from 1000)
         WIDTH: 50,          // Increased from 15
         HEIGHT: 35,
         RECHARGE_WIDTH: 4,  // Width of recharge bar
@@ -44,13 +45,17 @@ const CONSTANTS = {
     },
 
     ASTEROID: {
-        INITIAL_SPAWN_RATE: 2000,    // 2 seconds
-        MIN_SPAWN_RATE: 500,         // Minimum time between spawns
-        INITIAL_SPEED: 100,          // 100px per second
-        MAX_SPEED: 300,              // Maximum speed
-        SPEED_INCREMENT: 10,         // Speed increase per minute
-        SPAWN_RATE_DECREASE: 100,    // Spawn rate decrease per minute (ms)
+        INITIAL_SPAWN_RATE: 1500,    // 1.5 seconds (increased by 25% from 1200ms)
+        MIN_SPAWN_RATE: 250,         // Minimum spawn rate increased by 25% (from 200ms)
+        INITIAL_SPEED: 62.5,         // Speed increased by 25% (from 50px/s)
+        MAX_SPEED: 218.75,           // Maximum speed increased by 25% (from 175px/s)
+        SPEED_INCREMENT: 12.5,        // Speed increase increment increased by 25%
+        SPAWN_RATE_DECREASE: 200,    // Keep this the same
         SIZE: 15,                    // Default asteroid size
+    },
+
+    TRAJECTORY: {
+        VISIBLE: false,  // Trajectory lines hidden by default
     },
 
     SCORING: {

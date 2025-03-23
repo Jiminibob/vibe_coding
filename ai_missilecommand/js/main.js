@@ -1,4 +1,4 @@
 // Initialize game when window loads
 window.addEventListener('load', () => {
-    const game = new Game();
+    window.game = new Game();
 }); 

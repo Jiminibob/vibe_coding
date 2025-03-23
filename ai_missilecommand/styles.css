@@ -23,7 +23,7 @@ body {
 }
 
 #gameCanvas {
-    height: 720px;
+    height: 100%;
     background-color: #000;
     box-shadow: 0 0 20px rgba(0, 255, 255, 0.5);
 }
@@ -33,25 +33,35 @@ body {
     top: 0;
     left: 0;
     width: 100%;
+    height: 100%;
     pointer-events: none;
+    z-index: 10;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+#ui-overlay.active {
+    opacity: 1;
+}
+
+#time-display, #score-display, #high-score {
     color: #0ff;
-    text-shadow: 0 0 10px rgba(0, 255, 255, 0.8);
+    text-shadow: 0 0 5px rgba(0, 255, 255, 0.5);
     font-family: 'Courier New', monospace;
-    padding: 20px;
+    font-size: 1.2rem;
+    text-align: right;
 }
 
 #time-display {
-    position: absolute;
-    top: 20px;
     left: 20px;
-    font-size: 24px;
 }
 
 #score-display {
-    position: absolute;
-    top: 20px;
     right: 20px;
-    font-size: 24px;
+}
+
+#time-display.active, #score-display.active {
+    display: block;
 }
 
 /* Game state screens */
@@ -86,4 +96,551 @@ body {
 .game-screen button:hover {
     background: rgba(0, 255, 255, 0.2);
     box-shadow: 0 0 20px rgba(0, 255, 255, 0.8);
+}
+
+.screen {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: none;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    gap: 2rem;
+    z-index: 10;
+}
+
+.screen.active {
+    display: flex;
+}
+
+/* Welcome Screen HUD Design */
+#welcome-screen {
+    background: linear-gradient(135deg, 
+        rgba(0, 255, 255, 0.05) 0%,
+        rgba(0, 0, 0, 0) 50%,
+        rgba(0, 255, 255, 0.05) 100%
+    );
+    overflow: hidden;
+}
+
+/* Corner decorations */
+.corner {
+    position: absolute;
+    width: 100px;
+    height: 100px;
+    border: 2px solid #0ff;
+    opacity: 0.5;
+}
+
+.corner-tl {
+    top: 20px;
+    left: 20px;
+    border-right: none;
+    border-bottom: none;
+}
+
+.corner-tr {
+    top: 20px;
+    right: 20px;
+    border-left: none;
+    border-bottom: none;
+}
+
+.corner-bl {
+    bottom: 20px;
+    left: 20px;
+    border-right: none;
+    border-top: none;
+}
+
+.corner-br {
+    bottom: 20px;
+    right: 20px;
+    border-left: none;
+    border-top: none;
+}
+
+/* Diagonal lines in corners */
+.corner::after {
+    content: '';
+    position: absolute;
+    width: 140%;
+    height: 2px;
+    background: linear-gradient(90deg, #0ff, transparent);
+}
+
+.corner-tl::after {
+    top: 0;
+    left: 0;
+    transform: rotate(45deg);
+    transform-origin: 0 0;
+}
+
+.corner-tr::after {
+    top: 0;
+    right: 0;
+    transform: rotate(-45deg);
+    transform-origin: 100% 0;
+}
+
+.corner-bl::after {
+    bottom: 0;
+    left: 0;
+    transform: rotate(-45deg);
+    transform-origin: 0 100%;
+}
+
+.corner-br::after {
+    bottom: 0;
+    right: 0;
+    transform: rotate(45deg);
+    transform-origin: 100% 100%;
+}
+
+/* HUD circles */
+.hud-circle {
+    position: absolute;
+    border: 2px solid rgba(0, 255, 255, 0.3);
+    border-radius: 50%;
+    animation: rotate 10s linear infinite;
+}
+
+.hud-circle-1 {
+    width: 300px;
+    height: 300px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.hud-circle-2 {
+    width: 400px;
+    height: 400px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border-style: dashed;
+}
+
+@keyframes rotate {
+    from { transform: translate(-50%, -50%) rotate(0deg); }
+    to { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+/* Enhanced title styling */
+#welcome-screen .title {
+    position: relative;
+    font-size: 3rem;
+    color: #0ff;
+    text-shadow: 0 0 10px rgba(0, 255, 255, 0.7);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin: 0;
+    text-align: center;
+    padding: 2rem;
+    background: rgba(0, 255, 255, 0.1);
+    clip-path: polygon(5% 0, 95% 0, 100% 50%, 95% 100%, 5% 100%, 0 50%);
+    z-index: 1;
+}
+
+/* Scanning lines */
+.scan-line-h, .scan-line-v {
+    position: absolute;
+    opacity: 0.5;
+}
+
+.scan-line-h {
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, 
+        transparent 0%, 
+        rgba(0, 255, 255, 0.5) 50%, 
+        transparent 100%
+    );
+}
+
+.scan-line-v {
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: linear-gradient(180deg, 
+        transparent 0%, 
+        rgba(0, 255, 255, 0.5) 50%, 
+        transparent 100%
+    );
+}
+
+/* Coordinate numbers */
+.scan-line-h::before,
+.scan-line-v::before {
+    content: attr(data-coord);
+    position: absolute;
+    font-family: 'Courier New', monospace;
+    font-size: 0.7rem;
+    color: #0ff;
+    text-shadow: 0 0 5px rgba(0, 255, 255, 0.7);
+    opacity: 0.8;
+    white-space: nowrap;
+}
+
+.scan-line-h::before {
+    left: var(--pos);
+    top: -15px;
+}
+
+.scan-line-v::before {
+    left: 5px;
+    top: var(--pos);
+    transform: rotate(-90deg);
+    transform-origin: left center;
+}
+
+.scan-h-1 { animation: scan-h-1 8s linear infinite; }
+.scan-h-2 { animation: scan-h-2 12s linear infinite; }
+.scan-v-1 { animation: scan-v-1 10s linear infinite; }
+.scan-v-2 { animation: scan-v-2 15s linear infinite; }
+
+@keyframes scan-h-1 {
+    0% {
+        transform: translateY(-100%);
+        opacity: 0;
+    }
+    10% { opacity: 0.5; }
+    90% { opacity: 0.5; }
+    100% {
+        transform: translateY(100vh);
+        opacity: 0;
+    }
+}
+
+@keyframes scan-h-2 {
+    0% {
+        transform: translateY(100vh);
+        opacity: 0;
+    }
+    10% { opacity: 0.5; }
+    90% { opacity: 0.5; }
+    100% {
+        transform: translateY(-100%);
+        opacity: 0;
+    }
+}
+
+@keyframes scan-v-1 {
+    0% {
+        transform: translateX(-100%);
+        opacity: 0;
+    }
+    10% { opacity: 0.5; }
+    90% { opacity: 0.5; }
+    100% {
+        transform: translateX(100vw);
+        opacity: 0;
+    }
+}
+
+@keyframes scan-v-2 {
+    0% {
+        transform: translateX(100vw);
+        opacity: 0;
+    }
+    10% { opacity: 0.5; }
+    90% { opacity: 0.5; }
+    100% {
+        transform: translateX(-100%);
+        opacity: 0;
+    }
+}
+
+.scan-v-1::before,
+.scan-v-2::before {
+    content: attr(data-coord);
+    position: absolute;
+    font-family: 'Courier New', monospace;
+    font-size: 0.7rem;
+    color: rgba(0, 255, 255, 0.8);
+    text-shadow: 0 0 5px rgba(0, 255, 255, 0.5);
+    white-space: nowrap;
+    transform: rotate(-90deg) translateX(-100%) translateY(-0.5rem);
+    transform-origin: 0 0;
+    left: -0.5rem;
+    top: var(--pos);
+}
+
+.button-container {
+    display: flex;
+    gap: 2rem;
+    position: relative;
+    padding: 2rem;
+}
+
+.button-container::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -20px;
+    right: -20px;
+    bottom: 0;
+    border: 2px solid rgba(0, 255, 255, 0.3);
+    clip-path: polygon(5% 0, 95% 0, 100% 100%, 0 100%);
+    pointer-events: none;
+}
+
+.cyber-button {
+    background: rgba(0, 255, 255, 0.25);
+    border: 2px solid #0ff;
+    color: #0ff;
+    padding: 1rem 2rem;
+    font-size: 1.2rem;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 0 10px rgba(0, 255, 255, 0.3);
+    position: relative;
+    clip-path: polygon(10% 0, 90% 0, 100% 50%, 90% 100%, 10% 100%, 0 50%);
+}
+
+.cyber-button::before {
+    content: '';
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    right: -2px;
+    bottom: -2px;
+    background: linear-gradient(45deg, #0ff, transparent);
+    z-index: -1;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.cyber-button:hover {
+    background: rgba(0, 255, 255, 0.4);
+    box-shadow: 0 0 20px rgba(0, 255, 255, 0.5);
+}
+
+.cyber-button:hover::before {
+    opacity: 0.5;
+}
+
+#instructions-screen {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+    background: linear-gradient(135deg, 
+        rgba(0, 255, 255, 0.05) 0%,
+        rgba(0, 0, 0, 0) 50%,
+        rgba(0, 255, 255, 0.05) 100%
+    );
+}
+
+#instructions-screen.active {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+#instructions-screen .title {
+    position: relative;
+    font-size: 3rem;
+    color: #0ff;
+    text-shadow: 0 0 10px rgba(0, 255, 255, 0.7);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin: 0;
+    text-align: center;
+    padding: 2rem;
+    background: rgba(0, 255, 255, 0.1);
+    clip-path: polygon(5% 0, 95% 0, 100% 50%, 95% 100%, 5% 100%, 0 50%);
+    z-index: 1;
+}
+
+.instructions-content {
+    max-width: 600px;
+    padding: 2rem;
+    border: 1px solid rgba(0, 255, 255, 0.3);
+    background: rgba(0, 0, 0, 0.7);
+    border-radius: 5px;
+    box-shadow: 0 0 20px rgba(0, 255, 255, 0.1);
+}
+
+.instructions-content p {
+    margin: 1rem 0;
+    color: #0ff;
+}
+
+.instructions-content ul {
+    list-style: none;
+    padding: 0;
+    margin: 2rem 0;
+    text-align: left;
+}
+
+.instructions-content li {
+    margin: 1rem 0;
+    color: rgba(0, 255, 255, 0.8);
+    padding-left: 1.5rem;
+    position: relative;
+}
+
+.instructions-content li::before {
+    content: '>';
+    position: absolute;
+    left: 0;
+    color: #0ff;
+}
+
+.countdown {
+    font-size: 1.5rem;
+    margin-top: 2rem;
+    color: #0ff;
+    text-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+}
+
+.hud-panel {
+    position: absolute;
+    padding: 1rem 2rem;
+    border: 1px solid rgba(0, 255, 255, 0.3);
+    background: rgba(0, 0, 0, 0.7);
+    border-radius: 5px;
+    box-shadow: 0 0 20px rgba(0, 255, 255, 0.1);
+    min-width: 150px;
+}
+
+.time-panel {
+    top: 20px;
+    left: 20px;
+}
+
+.score-panel {
+    top: 20px;
+    right: 20px;
+}
+
+#game-over-screen {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+    background: linear-gradient(135deg, 
+        rgba(0, 255, 255, 0.05) 0%,
+        rgba(0, 0, 0, 0) 50%,
+        rgba(0, 255, 255, 0.05) 100%
+    );
+}
+
+#game-over-screen.active {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+#game-over-screen .title {
+    position: relative;
+    font-size: 3rem;
+    color: #0ff;
+    text-shadow: 0 0 10px rgba(0, 255, 255, 0.7);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin: 0;
+    text-align: center;
+    padding: 2rem;
+    background: rgba(0, 255, 255, 0.1);
+    clip-path: polygon(5% 0, 95% 0, 100% 50%, 95% 100%, 5% 100%, 0 50%);
+    z-index: 1;
+}
+
+.stats {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    margin: 2rem 0;
+    padding: 1rem;
+    border-left: 2px solid rgba(0, 255, 255, 0.3);
+}
+
+.stat-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 2rem;
+    font-family: 'Courier New', monospace;
+}
+
+.stat-label {
+    color: rgba(0, 255, 255, 0.7);
+    font-size: 1.2rem;
+    text-transform: uppercase;
+}
+
+#final-score, #final-time, #high-score {
+    color: #0ff;
+    font-size: 1.5rem;
+    text-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+    font-weight: bold;
+    min-width: 150px;
+    text-align: right;
+}
+
+.high-score-item {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(0, 255, 255, 0.3);
+}
+
+.high-score-item.new-record {
+    display: flex;
+    justify-content: center;
+}
+
+.high-score-item.new-record #high-score {
+    display: none;
+}
+
+.high-score-item.new-record #high-score-label {
+    font-size: 1.5rem;
+    color: #0f0;
+    text-shadow: 0 0 10px rgba(0, 255, 0, 0.7);
+    animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+    0% {
+        opacity: 0.7;
+    }
+    50% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0.7;
+    }
+}
+
+.base, .launcher {
+    fill: rgba(0, 255, 255, 0.25);
+    stroke: #0ff;
+    stroke-width: 2;
+}
+
+.missile {
+    fill: rgba(255, 255, 255, 0.25);
+    stroke: #fff;
+    stroke-width: 2;
+}
+
+.enemy-missile {
+    fill: rgba(255, 0, 0, 0.25);
+    stroke: #f00;
+    stroke-width: 2;
 } 

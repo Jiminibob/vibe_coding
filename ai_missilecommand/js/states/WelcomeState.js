@@ -1,48 +1,39 @@
-class WelcomeState extends GameState {
+class WelcomeState {
     constructor(game) {
-        super(game);
-        this.playButton = null;
+        this.game = game;
+        
+        // Setup event listener for start button
+        document.getElementById('start-button')?.addEventListener('click', () => {
+            document.getElementById('welcome-screen').classList.remove('active');
+            document.getElementById('instructions-screen').classList.add('active');
+        });
+
+        // Setup event listener for continue button
+        document.getElementById('continue-button')?.addEventListener('click', () => {
+            document.getElementById('instructions-screen').classList.remove('active');
+            this.game.setState('play');
+        });
+    }
+
+    enter() {
+        // Show welcome screen
+        document.getElementById('welcome-screen').classList.add('active');
+    }
+
+    exit() {
+        // Hide welcome screen
+        document.getElementById('welcome-screen').classList.remove('active');
+    }
+
+    update(deltaTime) {
+        // No updates needed for welcome screen
     }
 
     render(ctx) {
-        const centerX = this.game.canvas.width / 2;
-        const centerY = this.game.canvas.height / 2;
-
-        // Draw title
-        this.drawText(
-            ctx,
-            "AI MISSILE COMMAND",
-            centerX,
-            centerY - 100,
-            CONSTANTS.FONT.SIZE.LARGE
-        );
-
-        // Draw play button
-        this.playButton = this.drawButton(
-            ctx,
-            "PLAY",
-            centerX,
-            centerY + 50,
-            200,
-            60
-        );
-
-        // Draw neon glow effects
-        ctx.shadowBlur = 20;
-        ctx.shadowColor = CONSTANTS.COLORS.PRIMARY;
-        this.drawText(
-            ctx,
-            "AI MISSILE COMMAND",
-            centerX,
-            centerY - 100,
-            CONSTANTS.FONT.SIZE.LARGE
-        );
-        ctx.shadowBlur = 0;
+        // No canvas rendering needed - UI is handled by DOM
     }
 
     handleClick(x, y) {
-        if (this.playButton && this.isPointInRect(x, y, this.playButton)) {
-            this.game.setState('instructions');
-        }
+        // Click handling is done through DOM event listeners
     }
 } 

@@ -10,8 +10,103 @@
     <div id="game-container">
         <canvas id="gameCanvas"></canvas>
         <div id="ui-overlay">
-            <div id="time-display">00:00:000</div>
-            <div id="score-display">Score: 0</div>
+            <div class="hud-panel time-panel">
+                <div id="time-display">00:00:000</div>
+            </div>
+            <div class="hud-panel score-panel">
+                <div id="score-display">Score: 0</div>
+            </div>
+        </div>
+        <div id="welcome-screen" class="screen">
+            <!-- Corner decorations -->
+            <div class="corner corner-tl"></div>
+            <div class="corner corner-tr"></div>
+            <div class="corner corner-bl"></div>
+            <div class="corner corner-br"></div>
+            
+            <!-- HUD circles -->
+            <div class="hud-circle hud-circle-1"></div>
+            <div class="hud-circle hud-circle-2"></div>
+            
+            <!-- Scanning lines -->
+            <div class="scan-line-h scan-h-1" data-coord="LAT 34.5"></div>
+            <div class="scan-line-h scan-h-2" data-coord="LAT 28.2"></div>
+            <div class="scan-line-v scan-v-1" data-coord="LON 118.3"></div>
+            <div class="scan-line-v scan-v-2" data-coord="LON 122.1"></div>
+
+            <h1 class="title">AI MISSILE COMMAND</h1>
+            <div class="button-container">
+                <button class="cyber-button" id="start-button">Initialize</button>
+            </div>
+        </div>
+        <div id="instructions-screen" class="screen">
+            <!-- Corner decorations -->
+            <div class="corner corner-tl"></div>
+            <div class="corner corner-tr"></div>
+            <div class="corner corner-bl"></div>
+            <div class="corner corner-br"></div>
+            
+            <!-- HUD circles -->
+            <div class="hud-circle hud-circle-1"></div>
+            <div class="hud-circle hud-circle-2"></div>
+            
+            <!-- Scanning lines -->
+            <div class="scan-line-h scan-h-1" data-coord=""></div>
+            <div class="scan-line-h scan-h-2" data-coord=""></div>
+            <div class="scan-line-v scan-v-1" data-coord=""></div>
+            <div class="scan-line-v scan-v-2" data-coord=""></div>
+
+            <h1 class="title">MISSION PROTOCOLS</h1>
+            <div class="instructions-content">
+                <p>DEFEND YOUR BASES FROM INCOMING ASTEROIDS</p>
+                <ul>
+                    <li>LEFT CLICK to launch missiles</li>
+                    <li>Protect your missile bases</li>
+                    <li>Collect power-ups for advantages</li>
+                </ul>
+            </div>
+            <div class="button-container">
+                <button class="cyber-button" id="continue-button">Continue</button>
+            </div>
+        </div>
+        <div id="game-over-screen" class="screen">
+            <!-- Corner decorations -->
+            <div class="corner corner-tl"></div>
+            <div class="corner corner-tr"></div>
+            <div class="corner corner-bl"></div>
+            <div class="corner corner-br"></div>
+            
+            <!-- HUD circles -->
+            <div class="hud-circle hud-circle-1"></div>
+            <div class="hud-circle hud-circle-2"></div>
+            
+            <!-- Scanning lines -->
+            <div class="scan-line-h scan-h-1" data-coord=""></div>
+            <div class="scan-line-h scan-h-2" data-coord=""></div>
+            <div class="scan-line-v scan-v-1" data-coord=""></div>
+            <div class="scan-line-v scan-v-2" data-coord=""></div>
+
+            <h1 class="title">SYSTEM FAILURE</h1>
+            <div class="instructions-content">
+                <p>DEFENSE NETWORK COMPROMISED</p>
+                <div class="stats">
+                    <div class="stat-item">
+                        <span class="stat-label">FINAL SCORE:</span>
+                        <span id="final-score">0</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">TIME SURVIVED:</span>
+                        <span id="final-time">00:00:000</span>
+                    </div>
+                    <div class="stat-item high-score-item" id="high-score-container">
+                        <span class="stat-label" id="high-score-label">HIGH SCORE:</span>
+                        <span id="high-score">0</span>
+                    </div>
+                </div>
+            </div>
+            <div class="button-container">
+                <button class="cyber-button" id="restart-button" onclick="window.game.states.gameOver.handleRestart()">Reinitialize</button>
+            </div>
         </div>
     </div>
 
@@ -26,6 +121,9 @@
     <script src="js/Asteroid.js"></script>
     <script src="js/Explosion.js"></script>
     <script src="js/ScorePopup.js"></script>
+    <script src="js/TextPopup.js"></script>
+    <script src="js/DeResParticles.js"></script>
+    <script src="js/Pickup.js"></script>
     
     <!-- Game States -->
     <script src="js/states/GameState.js"></script>

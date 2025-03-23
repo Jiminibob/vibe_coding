@@ -33,6 +33,7 @@ class Base {
             currentHeight
         );
         
+        // Reset shadow
         ctx.shadowBlur = 0;
     }
 

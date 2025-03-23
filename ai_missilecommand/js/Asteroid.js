@@ -89,13 +89,29 @@ class Asteroid {
 
     update(deltaTime) {
         if (this.destroyed) {
+            const GRAVITY = 800; // Increased gravity for more weight
+            const DRAG = 0.3; // Add air resistance for more weight feeling
+            
             // Update explosion particles
             for (let i = this.explosionParticles.length - 1; i >= 0; i--) {
                 const particle = this.explosionParticles[i];
+                
+                // Apply gravity
+                particle.vy += GRAVITY * deltaTime;
+                
+                // Apply drag
+                particle.vx *= (1 - DRAG * deltaTime);
+                particle.vy *= (1 - DRAG * deltaTime);
+                
+                // Update position
                 particle.x += particle.vx * deltaTime;
                 particle.y += particle.vy * deltaTime;
-                particle.alpha -= deltaTime * 1.5;
-                particle.size *= 1.02; // Slowly increase size
+                
+                // Update rotation
+                particle.rotation += particle.rotationSpeed * deltaTime;
+                
+                // Fade out more slowly
+                particle.alpha -= deltaTime * 0.7;
                 
                 if (particle.alpha <= 0) {
                     this.explosionParticles.splice(i, 1);
@@ -173,18 +189,36 @@ class Asteroid {
         if (this.destroyed) {
             // Draw explosion particles
             for (const particle of this.explosionParticles) {
+                ctx.save();
+                ctx.translate(particle.x, particle.y);
+                ctx.rotate(particle.rotation);
+
+                // Draw asteroid-shaped particle
                 ctx.beginPath();
-                ctx.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2);
-                ctx.fillStyle = `rgba(255, 0, 136, ${particle.alpha * 0.5})`;
+                ctx.moveTo(particle.points[0].x, particle.points[0].y);
+                for (const point of particle.points) {
+                    ctx.lineTo(point.x, point.y);
+                }
+                ctx.closePath();
+                
+                const color = CONSTANTS.COLORS.DANGER;
+                // Parse hex color
+                const r = parseInt(color.slice(1, 3), 16);
+                const g = parseInt(color.slice(3, 5), 16);
+                const b = parseInt(color.slice(5, 7), 16);
+                
+                // Fill with semi-transparent color
+                ctx.fillStyle = `rgba(${r}, ${g}, ${b}, ${particle.alpha * 0.5})`;
                 ctx.fill();
                 
-                // Add glow effect to particles
-                ctx.shadowBlur = 10;
-                ctx.shadowColor = CONSTANTS.COLORS.DANGER;
-                ctx.strokeStyle = CONSTANTS.COLORS.DANGER;
+                // Add glow effect
+                ctx.shadowBlur = 5;
+                ctx.shadowColor = color;
+                ctx.strokeStyle = color;
                 ctx.lineWidth = 1;
                 ctx.stroke();
-                ctx.shadowBlur = 0;
+                
+                ctx.restore();
             }
             return;
         }
@@ -193,7 +227,12 @@ class Asteroid {
         for (const particle of this.trail) {
             ctx.beginPath();
             ctx.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2);
-            ctx.fillStyle = `rgba(255, 0, 136, ${particle.alpha * 0.3})`;
+            const color = CONSTANTS.COLORS.DANGER;
+            // Parse hex color
+            const r = parseInt(color.slice(1, 3), 16);
+            const g = parseInt(color.slice(3, 5), 16);
+            const b = parseInt(color.slice(5, 7), 16);
+            ctx.fillStyle = `rgba(${r}, ${g}, ${b}, ${particle.alpha * 0.3})`;
             ctx.fill();
         }
 
@@ -223,12 +262,14 @@ class Asteroid {
         
         ctx.restore();
 
-        // Draw target indicator line
-        ctx.beginPath();
-        ctx.moveTo(this.x, this.y);
-        ctx.lineTo(this.targetX, this.targetY);
-        ctx.strokeStyle = `rgba(255, 0, 136, 0.2)`;
-        ctx.stroke();
+        // Draw target indicator line only if trajectory is visible
+        if (CONSTANTS.TRAJECTORY.VISIBLE) {
+            ctx.beginPath();
+            ctx.moveTo(this.x, this.y);
+            ctx.lineTo(this.targetX, this.targetY);
+            ctx.strokeStyle = `rgba(255, 0, 136, 0.2)`;
+            ctx.stroke();
+        }
     }
 
     checkCollision(obj) {
@@ -255,18 +296,35 @@ class Asteroid {
             this.destroyed = true;
             
             // Create explosion particles
-            const numParticles = 20;
+            const numParticles = 12; // Fewer particles since they're bigger
+            const particleSize = this.radius * 0.3; // 30% of asteroid size (up from 10%)
+            
             for (let i = 0; i < numParticles; i++) {
                 const angle = (i / numParticles) * Math.PI * 2;
-                const speed = Math.random() * 200 + 100; // Random speed between 100 and 300
-                const variance = Math.random() * Math.PI / 4; // Random angle variance
+                const speed = Math.random() * 200 + 100; // Slower speed (100-300) to feel heavier
+                const variance = Math.random() * Math.PI / 6; // Less variance for more directed explosion
+                
+                // Generate wonky shape points for each particle
+                const points = [];
+                const numPoints = 7; // More points for more asteroid-like shape
+                for (let j = 0; j < numPoints; j++) {
+                    const pointAngle = (j / numPoints) * Math.PI * 2;
+                    const variance = 0.4; // More variance for more asteroid-like shape
+                    const radiusOffset = 1 + (Math.random() * 2 - 1) * variance;
+                    points.push({
+                        x: Math.cos(pointAngle) * particleSize * radiusOffset,
+                        y: Math.sin(pointAngle) * particleSize * radiusOffset
+                    });
+                }
                 
                 this.explosionParticles.push({
                     x: this.x,
                     y: this.y,
                     vx: Math.cos(angle + variance) * speed,
                     vy: Math.sin(angle + variance) * speed,
-                    size: Math.random() * this.radius * 0.4 + this.radius * 0.2,
+                    points: points,
+                    rotation: Math.random() * Math.PI * 2,
+                    rotationSpeed: (Math.random() * 1 - 0.5) * Math.PI, // Slower rotation
                     alpha: 1
                 });
             }
